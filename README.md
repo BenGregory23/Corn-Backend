@@ -1,26 +1,8 @@
+
 # Corn Backend
 
-## Routes (API)
+Backend de l'application mobile [Corn](https://github.com/BenGregory23/Corn) 
 
-### /api/users
-
-### /api/movies/
-
-### /api/login
-
-### /api/register
-
-
-
-## Tasks 
-
-
-
-
-
-
-
-5. create middleware and add jwt
 
 ## Routes 
 
