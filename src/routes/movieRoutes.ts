@@ -2,7 +2,7 @@ import { getRandomMovies} from "../controllers/movieController";
 
 const router = require("express").Router();
 
-router.get("/movies/random:id", getRandomMovies);
+router.get("/movies/random/:id", getRandomMovies);
 
 
 
