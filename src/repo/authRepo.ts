@@ -1,4 +1,4 @@
-import { User } from "../models/user";
+import { User, UserWithPassword } from "../models/user";
 import { getDB } from "../db";
 import { SHA256 } from "crypto-js";
 
@@ -19,7 +19,7 @@ export async function login(email:string, password:string){
     };
 }
 
-export async function register(user: User): Promise<string> {
+export async function register(user: UserWithPassword): Promise<string> {
     const db = getDB();
 
     const userPassword = user.password;

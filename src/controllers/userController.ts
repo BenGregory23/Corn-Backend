@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { User } from '../models/user';
-
+import { User, UserWithPassword } from '../models/user';
 import { getUsers, getUser, createUser, updateUser, deleteUser, getFriends, addFriend, removeFriend, addGenre, removeGenre, getMoviesFromUser, addMovie, removeMovie } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -30,7 +29,7 @@ export async function getUserById(req: Request, res: Response) {
 
 export async function createUserHandler(req: Request, res: Response) {
     try {
-        const user: User = req.body;
+        const user: UserWithPassword = req.body;
         const id = await createUser(user);
         res.status(201);
         res.json({ id });

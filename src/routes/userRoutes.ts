@@ -1,4 +1,5 @@
 import { getAllUsers, getUserById, createUserHandler, updateUserHandler, deleteUserHandler, addMovieHandler, removeMovieHandler, addFriendHandler, removeFriendHandler, getFriendsHandler, getUserMovies} from "../controllers/userController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = require("express").Router();
 

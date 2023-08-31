@@ -1,8 +1,10 @@
 
-import { User } from "../models/user";
+import { User, UserWithPassword } from "../models/user";
 import { getDB } from "../db";
 import { ObjectId } from "mongodb";
 import { SHA256 } from "crypto-js";
+
+
 
 export async function getUsers(): Promise<User[]> {
   const db = getDB();
@@ -14,13 +16,10 @@ export async function getUsers(): Promise<User[]> {
        throw new Error('No users found');
    }
 
-    // return array of User objects
-
     return users.map((user: any) => ({
         _id: user._id.toString(),
         name: user.name,
         email: user.email,
-        password: user.password,
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
@@ -28,7 +27,7 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function getUser(id: string): Promise<User | null> {
-    console.log(id)
+    
     const db = getDB();
     const user = await db.collection('users').findOne({ _id: new ObjectId(id) });
     if (!user) {
@@ -38,7 +37,6 @@ export async function getUser(id: string): Promise<User | null> {
         _id: user._id.toString(),
         name: user.name,
         email: user.email,
-        password: user.password,
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
@@ -46,7 +44,7 @@ export async function getUser(id: string): Promise<User | null> {
 }
 
 
-export async function createUser(user: User): Promise<string> {
+export async function createUser(user:UserWithPassword): Promise<string> {
     const db = getDB();
    
     const userPassword = user.password;
