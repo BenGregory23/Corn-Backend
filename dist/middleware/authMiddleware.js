@@ -8,13 +8,14 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
 const authMiddleware = (req, res, next) => {
-    const token = req.header('x-auth-token');
+    const token = req.header('Authorization');
     if (!token) {
         return res.status(401).json({ message: 'No token, authorization denied' });
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // Attach user info to the request object
+        const decoded = jsonwebtoken_1.default.sign(token, process.env.JWT_SECRET);
+        console.log(decoded);
+        //(req as any).user = decoded; // Attach user info to the request object
         next();
     }
     catch (error) {

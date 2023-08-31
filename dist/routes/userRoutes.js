@@ -13,5 +13,4 @@ router.delete("/users/:id/movies", userController_1.removeMovieHandler);
 router.get("/users/:id/friends", userController_1.getFriendsHandler);
 router.post("/users/:id/friends", userController_1.addFriendHandler);
 router.delete("/users/:id/friends", userController_1.removeFriendHandler);
-//TODO add the other routes
 module.exports = router;

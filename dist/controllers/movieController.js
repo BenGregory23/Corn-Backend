@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserMovies = exports.getRandomMovies = void 0;
+exports.getRandomMovies = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const userRepo_1 = require("../repo/userRepo");
 dotenv_1.default.config();
@@ -40,15 +40,3 @@ const getRandomMovies = async (req, res) => {
     }
 };
 exports.getRandomMovies = getRandomMovies;
-async function getUserMovies(req, res) {
-    try {
-        const userId = req.params.id;
-        const movies = await (0, userRepo_1.getMoviesFromUser)(userId);
-        res.json(movies);
-    }
-    catch (err) {
-        res.status(500);
-        res.send(err.message);
-    }
-}
-exports.getUserMovies = getUserMovies;

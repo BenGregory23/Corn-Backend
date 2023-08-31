@@ -11,12 +11,10 @@ async function getUsers() {
     if (!users) {
         throw new Error('No users found');
     }
-    // return array of User objects
     return users.map((user) => ({
         _id: user._id.toString(),
         name: user.name,
         email: user.email,
-        password: user.password,
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
@@ -24,7 +22,6 @@ async function getUsers() {
 }
 exports.getUsers = getUsers;
 async function getUser(id) {
-    console.log(id);
     const db = (0, db_1.getDB)();
     const user = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(id) });
     if (!user) {
@@ -34,7 +31,6 @@ async function getUser(id) {
         _id: user._id.toString(),
         name: user.name,
         email: user.email,
-        password: user.password,
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,

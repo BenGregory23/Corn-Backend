@@ -1,7 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.registerUser = void 0;
 const authRepo_1 = require("../repo/authRepo");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 // register
 async function registerUser(req, res) {
     try {
@@ -25,7 +31,9 @@ async function loginUser(req, res) {
             res.send('Invalid credentials');
             return;
         }
-        res.json(user);
+        const expiresIn = "7d";
+        const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
+        res.json({ user, token });
     }
     catch (err) {
         res.status(500);
