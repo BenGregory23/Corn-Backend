@@ -14,8 +14,7 @@ const authMiddleware = (req, res, next) => {
     }
     try {
         const decoded = jsonwebtoken_1.default.sign(token, process.env.JWT_SECRET);
-        console.log(decoded);
-        //(req as any).user = decoded; // Attach user info to the request object
+        req.decoded = decoded; // Attach user info to the request object
         next();
     }
     catch (error) {

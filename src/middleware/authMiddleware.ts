@@ -16,13 +16,9 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
   try {
     const decoded = jwt.sign(token, process.env.JWT_SECRET!);
-    console.log(decoded);
 
    
-
-    
-   
-    (req as any).user = decoded; // Attach user info to the request object
+    (req as any).decoded = decoded; // Attach user info to the request object
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token is not valid' });

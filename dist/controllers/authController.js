@@ -33,6 +33,7 @@ async function loginUser(req, res) {
         }
         const expiresIn = "7d";
         const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
+        console.log(user);
         res.json({ user, token });
     }
     catch (err) {
