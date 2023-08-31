@@ -24,8 +24,11 @@ export async function registerUser(req: Request, res: Response) {
 
 export async function loginUser(req: Request, res: Response) {
     try {
-        const {email, password} = req.params;
-        const user = await login(email, password) as User
+        // get email and password from path as ?email and ?password
+        const queryParams = req.query;
+        const email = queryParams.email;
+        const password = queryParams.password;
+        const user = await login(email as string, password as string);
        
 
         if(!user){

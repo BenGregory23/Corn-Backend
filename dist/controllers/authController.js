@@ -24,7 +24,10 @@ exports.registerUser = registerUser;
 // login
 async function loginUser(req, res) {
     try {
-        const { email, password } = req.body;
+        // get email and password from path as ?email and ?password
+        const queryParams = req.query;
+        const email = queryParams.email;
+        const password = queryParams.password;
         const user = await (0, authRepo_1.login)(email, password);
         if (!user) {
             res.status(401);
@@ -33,7 +36,6 @@ async function loginUser(req, res) {
         }
         const expiresIn = "7d";
         const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
-        console.log(user);
         res.json({ user, token });
     }
     catch (err) {
