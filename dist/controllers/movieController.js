@@ -16,10 +16,11 @@ const getRandomMovies = async (req, res) => {
             while (randomPage === 0) {
                 randomPage = Math.floor(Math.random() * 500);
             }
-            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${10}`;
+            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}`;
             const response = await fetch(url);
             const data = await response.json();
-            movies.push(data.results);
+            // merge the results into the movies array
+            movies = [...movies, ...data.results];
         }
         // check if the user already has the movie in their list
         // if they do, remove it from the list
@@ -27,6 +28,7 @@ const getRandomMovies = async (req, res) => {
         movies = movies.filter(movie => {
             let found = false;
             userMovies.forEach(userMovie => {
+                // @ts-ignore
                 if (userMovie.id_tmdb === movie.id) {
                     found = true;
                 }
