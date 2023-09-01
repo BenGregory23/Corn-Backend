@@ -71,7 +71,8 @@ export async function deleteUser(id: string): Promise<boolean> {
     return result.deletedCount > 0;
 }
 
-export async function getFriends(id: string): Promise<User[]> {
+// return a simple array 
+export async function getFriends(id: string): Promise<any[]> {
     const db = getDB();
 
     const result = await db.collection('users').findOne({ _id: new ObjectId(id) });
@@ -80,19 +81,19 @@ export async function getFriends(id: string): Promise<User[]> {
     }
 
     const friendIds = result.friends || [];
-    
+   
+
     const friends = await db.collection('users').find({ _id: { $in: friendIds } }).toArray();
     
-  
     return friends.map((friend: any) => ({
         _id: friend._id.toString(),
         name: friend.name,
         email: friend.email,
-        password: friend.password,
         genres: friend.genres,
         friends: friend.friends,
         movies: friend.movies,
-    }));
+    }));  
+
 }
 
 export async function addFriend(userId: string, friendEmail: string): Promise<boolean> {

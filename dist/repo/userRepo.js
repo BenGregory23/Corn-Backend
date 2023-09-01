@@ -60,6 +60,7 @@ async function deleteUser(id) {
     return result.deletedCount > 0;
 }
 exports.deleteUser = deleteUser;
+// return a simple array 
 async function getFriends(id) {
     const db = (0, db_1.getDB)();
     const result = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(id) });
@@ -72,7 +73,6 @@ async function getFriends(id) {
         _id: friend._id.toString(),
         name: friend.name,
         email: friend.email,
-        password: friend.password,
         genres: friend.genres,
         friends: friend.friends,
         movies: friend.movies,
