@@ -73,6 +73,7 @@ export async function getFriendsHandler(req: Request, res: Response) {
 
 export async function addFriendHandler(req: Request, res: Response) {
     try {
+        console.log(req.body);
         const friendEmail = req.body.email;
 
         const result = await addFriend(req.params.id, friendEmail);

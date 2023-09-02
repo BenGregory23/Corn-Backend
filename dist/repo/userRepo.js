@@ -68,14 +68,15 @@ async function getFriends(id) {
         return [];
     }
     const friendIds = result.friends || [];
+    // for each friend id, find the friend and return the friend's name and email and id 
     const friends = await db.collection('users').find({ _id: { $in: friendIds } }).toArray();
+    if (!friends) {
+        return [];
+    }
     return friends.map((friend) => ({
         _id: friend._id.toString(),
         name: friend.name,
         email: friend.email,
-        genres: friend.genres,
-        friends: friend.friends,
-        movies: friend.movies,
     }));
 }
 exports.getFriends = getFriends;

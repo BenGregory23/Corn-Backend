@@ -77,6 +77,7 @@ async function getFriendsHandler(req, res) {
 exports.getFriendsHandler = getFriendsHandler;
 async function addFriendHandler(req, res) {
     try {
+        console.log(req.body);
         const friendEmail = req.body.email;
         const result = await (0, userRepo_1.addFriend)(req.params.id, friendEmail);
         if (result == false) {
