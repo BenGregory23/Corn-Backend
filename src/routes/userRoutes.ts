@@ -1,5 +1,5 @@
-import { getAllUsers, getUserById, createUserHandler, updateUserHandler, deleteUserHandler, addMovieHandler, removeMovieHandler, addFriendHandler, removeFriendHandler, getFriendsHandler, getUserMovies} from "../controllers/userController";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { getAllUsers, getUserById, createUserHandler, updateUserHandler, deleteUserHandler, addMovieHandler, removeMovieHandler, addFriendHandler, removeFriendHandler, getFriendsHandler, getUserMovies, getGroupsHandler, addGenreHandler, addUserToGroupHandler, createGroupHandler, removeGroupHandler} from "../controllers/userController";
+
 
 const router = require("express").Router();
 
@@ -14,6 +14,10 @@ router.delete("/users/:id/movies", removeMovieHandler);
 router.get("/users/:id/friends", getFriendsHandler);
 router.post("/users/:id/friends", addFriendHandler);
 router.delete("/users/:id/friends", removeFriendHandler);
+router.get("/users/:id/groups", getGroupsHandler);
+router.post("/users/:id/groups", createGroupHandler);
+router.put("/users/:id/groups", addUserToGroupHandler);
+router.delete("/users/:id/groups", removeGroupHandler);
 
 module.exports = router;
 
