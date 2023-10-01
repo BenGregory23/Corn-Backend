@@ -1,6 +1,23 @@
 import { Request, Response } from 'express';
 import { User, UserWithPassword } from '../models/user';
-import { getUsers, getUser, createUser, updateUser, deleteUser, getFriends, addFriend, removeFriend, addGenre, removeGenre, getMoviesFromUser, addMovie, removeMovie } from '../repo/userRepo';
+import {    getUsers, 
+            getUser, 
+            createUser, 
+            updateUser, 
+            deleteUser, 
+            getFriends, 
+            addFriend, 
+            removeFriend, 
+            addGenre, 
+            removeGenre, 
+            getMoviesFromUser, 
+            addMovie, 
+            removeMovie,
+            createGroup,
+            removeGroup,
+            getGroups,
+            addUserToGroup
+        } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
     try {
@@ -73,7 +90,6 @@ export async function getFriendsHandler(req: Request, res: Response) {
 
 export async function addFriendHandler(req: Request, res: Response) {
     try {
-        console.log(req.body);
         const friendEmail = req.body.email;
 
         const result = await addFriend(req.params.id, friendEmail);
@@ -152,6 +168,52 @@ export async function removeMovieHandler(req: Request, res: Response) {
         res.send(err.message);
     }
 }
+
+export async function getGroupsHandler(req: Request, res: Response) {
+    try {
+        
+        const result = await getGroups(req.params.id);
+        
+        
+        res.json(result);
+    } catch (err:any) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+
+export async function removeGroupHandler(req: Request, res: Response) {
+    try {
+        const result = await removeGroup(req.params.id, req.body);
+        res.sendStatus(200);
+    } catch (err:any) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+
+export async function addUserToGroupHandler(req: Request, res: Response) {
+    try {
+        const result = await addUserToGroup(req.params.id, req.body);
+        res.sendStatus(200);
+    } catch (err:any) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+
+
+export async function createGroupHandler(req: Request, res: Response) {
+    try {
+        const result = await createGroup(req.params.id, req.body);
+        res.sendStatus(200);
+    } catch (err:any) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+
+
 
 
 
