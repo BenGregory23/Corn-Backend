@@ -23,6 +23,7 @@ export async function getUsers(): Promise<User[]> {
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
+        groups: user.groups,
     }));
 }
 
@@ -40,9 +41,9 @@ export async function getUser(id: string): Promise<User | null> {
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
+        groups: user.groups,
     };
 }
-
 
 export async function createUser(user:UserWithPassword): Promise<string> {
     const db = getDB();
@@ -157,6 +158,43 @@ export async function getMoviesFromUser(userId: string): Promise<object[]> {
     const movies = result.movies || [];
     return movies;
 }
+
+export async function getGroups(userId: string): Promise<Object[]> {
+    const db = getDB();
+    const result = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    if (!result) {
+        return [];
+    }
+
+    const groups = result.groups || [];
+    return groups;
+}
+
+export async function createGroup(userId: string, group: object): Promise<boolean> {
+    const db = getDB();
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $push: { groups: group } });
+    return result.modifiedCount > 0;
+}
+
+export async function removeGroup(userId: string, groupId: object): Promise<boolean> {
+    const db = getDB();
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $pull: { groups: groupId } });
+    return result.modifiedCount > 0;
+}
+
+export async function addUserToGroup(userId: string, groupId: string): Promise<boolean> {
+    const db = getDB();
+    // Checking if the user is already in the group
+    const isMember = await db.collection('users').findOne({ _id: new ObjectId(userId), groups: new ObjectId(groupId) });
+    if (isMember) {
+        return false;
+    }
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $push: { groups: groupId } });
+    return result.modifiedCount > 0;
+}
+
+
+
 
 
 
