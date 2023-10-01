@@ -16,11 +16,18 @@ export async function login(email:string, password:string){
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
+        groups: user.groups,
     };
 }
 
 export async function register(user: UserWithPassword): Promise<string> {
     const db = getDB();
+
+    // check if user exists
+    const existingUser = await db.collection('users').findOne({email: user.email});
+    if(existingUser){
+        throw new Error('User already exists');
+    }
 
     const userPassword = user.password;
     const hashedPassword = SHA256(userPassword).toString();
