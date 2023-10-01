@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 const crypto_js_1 = require("crypto-js");
@@ -18,6 +18,7 @@ async function getUsers() {
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
+        groups: user.groups,
     }));
 }
 exports.getUsers = getUsers;
@@ -34,6 +35,7 @@ async function getUser(id) {
         genres: user.genres,
         friends: user.friends,
         movies: user.movies,
+        groups: user.groups,
     };
 }
 exports.getUser = getUser;
@@ -138,3 +140,36 @@ async function getMoviesFromUser(userId) {
     return movies;
 }
 exports.getMoviesFromUser = getMoviesFromUser;
+async function getGroups(userId) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId) });
+    if (!result) {
+        return [];
+    }
+    const groups = result.groups || [];
+    return groups;
+}
+exports.getGroups = getGroups;
+async function createGroup(userId, group) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $push: { groups: group } });
+    return result.modifiedCount > 0;
+}
+exports.createGroup = createGroup;
+async function removeGroup(userId, groupId) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $pull: { groups: groupId } });
+    return result.modifiedCount > 0;
+}
+exports.removeGroup = removeGroup;
+async function addUserToGroup(userId, groupId) {
+    const db = (0, db_1.getDB)();
+    // Checking if the user is already in the group
+    const isMember = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId), groups: new mongodb_1.ObjectId(groupId) });
+    if (isMember) {
+        return false;
+    }
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $push: { groups: groupId } });
+    return result.modifiedCount > 0;
+}
+exports.addUserToGroup = addUserToGroup;

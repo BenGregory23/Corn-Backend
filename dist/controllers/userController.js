@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
+exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
 const userRepo_1 = require("../repo/userRepo");
 async function getAllUsers(req, res) {
     try {
@@ -162,3 +162,49 @@ async function removeMovieHandler(req, res) {
     }
 }
 exports.removeMovieHandler = removeMovieHandler;
+async function getGroupsHandler(req, res) {
+    try {
+        console.log("getGroupsHandler");
+        const result = await (0, userRepo_1.getGroups)(req.params.id);
+        console.log(result);
+        res.json(result);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.getGroupsHandler = getGroupsHandler;
+async function removeGroupHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.removeGroup)(req.params.id, req.body);
+        res.sendStatus(200);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.removeGroupHandler = removeGroupHandler;
+async function addUserToGroupHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.addUserToGroup)(req.params.id, req.body);
+        res.sendStatus(200);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.addUserToGroupHandler = addUserToGroupHandler;
+async function createGroupHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.createGroup)(req.params.id, req.body);
+        res.sendStatus(200);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.createGroupHandler = createGroupHandler;

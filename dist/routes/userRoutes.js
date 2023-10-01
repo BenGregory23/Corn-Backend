@@ -13,4 +13,7 @@ router.delete("/users/:id/movies", userController_1.removeMovieHandler);
 router.get("/users/:id/friends", userController_1.getFriendsHandler);
 router.post("/users/:id/friends", userController_1.addFriendHandler);
 router.delete("/users/:id/friends", userController_1.removeFriendHandler);
+router.get("/users/:id/groups", userController_1.getGroupsHandler);
+router.post("/users/:id/groups", userController_1.createGroupHandler);
+router.put("/users/:id/groups", userController_1.addUserToGroupHandler);
 module.exports = router;
