@@ -3,4 +3,6 @@ export interface Movie{
     name: string;
     poster: string;
     id_tmdb: string;
+    year: string;
+    description: string;
 }

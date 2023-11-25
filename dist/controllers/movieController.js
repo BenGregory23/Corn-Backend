@@ -20,8 +20,28 @@ const getRandomMovies = async (req, res) => {
             const response = await fetch(url);
             const data = await response.json();
             // merge the results into the movies array
-            movies = [...movies, ...data.results];
+            movies = [
+                ...movies,
+                ...data.results.map((result) => ({
+                    id_tmdb: result.id,
+                    title: result.title,
+                    poster: result.poster_path,
+                    release_date: result.release_date ? new Date(result.release_date).getFullYear() : null,
+                    overview: result.overview,
+                    adult: result.adult,
+                    backdrop_path: result.backdrop_path,
+                    genre_ids: result.genre_ids,
+                    original_language: result.original_language,
+                    original_title: result.original_title,
+                    popularity: result.popularity,
+                    video: result.video,
+                    vote_average: result.vote_average,
+                    vote_count: result.vote_count,
+                })),
+            ];
         }
+        // remove movies with no poster 
+        movies = movies.filter(movie => movie.poster !== null);
         // check if the user already has the movie in their list
         // if they do, remove it from the list
         const userMovies = await (0, userRepo_1.getMoviesFromUser)(userId);
@@ -29,12 +49,13 @@ const getRandomMovies = async (req, res) => {
             let found = false;
             userMovies.forEach(userMovie => {
                 // @ts-ignore
-                if (userMovie.id_tmdb === movie.id) {
+                if (userMovie.id_tmdb === movie.id_tmdb) {
                     found = true;
                 }
             });
             return !found;
         });
+        console.log("BONSOIR");
         res.json(movies);
     }
     catch (error) {
