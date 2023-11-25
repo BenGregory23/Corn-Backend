@@ -20,13 +20,15 @@ export async function login(email:string, password:string){
     };
 }
 
-export async function register(user: UserWithPassword): Promise<string> {
+// return id or return error
+
+export async function register(user: UserWithPassword): Promise<{id: string, error?: string}>{
     const db = getDB();
 
     // check if user exists
     const existingUser = await db.collection('users').findOne({email: user.email});
     if(existingUser){
-        throw new Error('User already exists');
+        return {id: '', error: 'User already exists, use a different email or log in.'};
     }
 
     const userPassword = user.password;
@@ -36,5 +38,5 @@ export async function register(user: UserWithPassword): Promise<string> {
     // TODO fix this 
     // @ts-ignore
     const result = await db.collection('users').insertOne(user);
-    return result.insertedId.toString();
+    return {id: result.insertedId.toString(), error: undefined};
 }

@@ -11,7 +11,12 @@ dotenv.config();
 // register
 export async function registerUser(req: Request, res: Response) {
     try {
-        const id = await register(req.body);
+        const {id, error} = await register(req.body);
+        if(error !== undefined){
+            res.status(400);
+            res.send(error);
+            return;
+        }
         res.status(201);
         res.json({id});
     } catch (err:any) {

@@ -11,7 +11,12 @@ dotenv_1.default.config();
 // register
 async function registerUser(req, res) {
     try {
-        const id = await (0, authRepo_1.register)(req.body);
+        const { id, error } = await (0, authRepo_1.register)(req.body);
+        if (error !== undefined) {
+            res.status(400);
+            res.send(error);
+            return;
+        }
         res.status(201);
         res.json({ id });
     }
