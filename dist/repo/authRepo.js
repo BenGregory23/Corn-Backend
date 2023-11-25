@@ -20,12 +20,13 @@ async function login(email, password) {
     };
 }
 exports.login = login;
+// return id or return error
 async function register(user) {
     const db = (0, db_1.getDB)();
     // check if user exists
     const existingUser = await db.collection('users').findOne({ email: user.email });
     if (existingUser) {
-        throw new Error('User already exists');
+        return { id: '', error: 'User already exists, use a different email or log in.' };
     }
     const userPassword = user.password;
     const hashedPassword = (0, crypto_js_1.SHA256)(userPassword).toString();
@@ -33,6 +34,6 @@ async function register(user) {
     // TODO fix this 
     // @ts-ignore
     const result = await db.collection('users').insertOne(user);
-    return result.insertedId.toString();
+    return { id: result.insertedId.toString(), error: undefined };
 }
 exports.register = register;

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRandomMovies = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const userRepo_1 = require("../repo/userRepo");
+const mongodb_1 = require("mongodb");
 dotenv_1.default.config();
 const getRandomMovies = async (req, res) => {
     try {
@@ -23,6 +24,8 @@ const getRandomMovies = async (req, res) => {
             movies = [
                 ...movies,
                 ...data.results.map((result) => ({
+                    // create a mondodb id
+                    _id: new mongodb_1.ObjectId(),
                     id_tmdb: result.id,
                     title: result.title,
                     poster: result.poster_path,

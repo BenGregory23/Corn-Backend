@@ -23,7 +23,7 @@ let userId: string;
 test("should register a user and return an id", async () => {
     const userResult = await register(user);
     assert(userResult != null);
-    userId = userResult;
+    userId = userResult.id;
 })
 
 test("should not register a user if email already exists", async () => {

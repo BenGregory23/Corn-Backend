@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { getMoviesFromUser } from '../repo/userRepo';
+import { ObjectId } from 'mongodb';
 
 dotenv.config();
 
 export interface Movie {
+  id: string;
   id_tmdb: number;
   title: string;
   poster: string;
@@ -43,9 +45,11 @@ export const getRandomMovies = async (req: Request, res: Response) => {
       movies = [
         ...movies,
         ...data.results.map((result: any) => ({
+          // create a mondodb id
+          _id: new ObjectId(),
           id_tmdb: result.id,
           title: result.title,
-          poster: result.poster_path 
+          poster: result.poster_path,
           release_date: result.release_date ? new Date(result.release_date).getFullYear() : null, // Extract year
           overview: result.overview,
           adult: result.adult,
