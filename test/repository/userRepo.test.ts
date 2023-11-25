@@ -1,6 +1,6 @@
 import { assert, expect, test } from "vitest";
 import { ObjectId } from "mongodb";
-import {getUsers, getUser, getFriends, getGroups, getMoviesFromUser} from '../../src/repo/userRepo';
+import {getUsers, getUser, getFriends, getGroups, getMoviesFromUser, addFriend} from '../../src/repo/userRepo';
 import { connectDB } from "../../src/db";
 
 // Since we are not starting the server, we need to connect to the DB
@@ -43,6 +43,8 @@ test("should return friends", async () => {
 })
 
 test.todo("should add a friend to a user")
+
+
 test.todo("should remove a friend from a user")
 
 

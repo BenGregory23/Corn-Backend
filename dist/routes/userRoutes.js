@@ -16,4 +16,5 @@ router.delete("/users/:id/friends", userController_1.removeFriendHandler);
 router.get("/users/:id/groups", userController_1.getGroupsHandler);
 router.post("/users/:id/groups", userController_1.createGroupHandler);
 router.put("/users/:id/groups", userController_1.addUserToGroupHandler);
+router.delete("/users/:id/groups", userController_1.removeGroupHandler);
 module.exports = router;

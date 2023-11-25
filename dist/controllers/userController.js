@@ -77,7 +77,6 @@ async function getFriendsHandler(req, res) {
 exports.getFriendsHandler = getFriendsHandler;
 async function addFriendHandler(req, res) {
     try {
-        console.log(req.body);
         const friendEmail = req.body.email;
         const result = await (0, userRepo_1.addFriend)(req.params.id, friendEmail);
         if (result == false) {
@@ -164,9 +163,7 @@ async function removeMovieHandler(req, res) {
 exports.removeMovieHandler = removeMovieHandler;
 async function getGroupsHandler(req, res) {
     try {
-        console.log("getGroupsHandler");
         const result = await (0, userRepo_1.getGroups)(req.params.id);
-        console.log(result);
         res.json(result);
     }
     catch (err) {
