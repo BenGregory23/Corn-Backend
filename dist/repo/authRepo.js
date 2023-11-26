@@ -11,7 +11,7 @@ async function login(email, password) {
     }
     return {
         _id: user._id.toString(),
-        name: user.name,
+        username: user.username,
         email: user.email,
         genres: user.genres,
         friends: user.friends,
@@ -23,10 +23,15 @@ exports.login = login;
 // return id or return error
 async function register(user) {
     const db = (0, db_1.getDB)();
-    // check if user exists
+    // check if user  with same email exists
     const existingUser = await db.collection('users').findOne({ email: user.email });
+    // check if user with same username exists
+    const existingUsername = await db.collection('users').findOne({ username: user.name });
+    if (existingUsername) {
+        return { id: '', error: 'Username already exists, use a different username or try log to in.' };
+    }
     if (existingUser) {
-        return { id: '', error: 'User already exists, use a different email or log in.' };
+        return { id: '', error: 'User already exists, use a different email or try log to in.' };
     }
     const userPassword = user.password;
     const hashedPassword = (0, crypto_js_1.SHA256)(userPassword).toString();

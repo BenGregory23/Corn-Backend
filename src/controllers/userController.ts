@@ -16,7 +16,8 @@ import {    getUsers,
             createGroup,
             removeGroup,
             getGroups,
-            addUserToGroup
+            addUserToGroup,
+            addFriendWithUsername
         } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -90,14 +91,20 @@ export async function getFriendsHandler(req: Request, res: Response) {
 
 export async function addFriendHandler(req: Request, res: Response) {
     try {
-        const friendEmail = req.body.email;
+        
+     
+        const friendUsername = req.body.username;
+        console.log(req.body.username)
+        
 
-        const result = await addFriend(req.params.id, friendEmail);
-        if(result == false) {
+        //const result = await addFriend(req.params.id, friendEmail);
+        const result = await addFriendWithUsername(req.params.id, friendUsername);
+        if(result.success == false) {
             res.status(404).send("Friend not found");
             return;
         }
-        res.sendStatus(200);
+        res.send(result);
+
     } catch (err:any) {
         res.status(500);
         res.send(err.message);
@@ -151,6 +158,7 @@ export async function getUserMovies(req: Request, res: Response) {
 
 export async function addMovieHandler(req: Request, res: Response) {
     try {
+       
         const result = await addMovie(req.params.id, req.body);
         res.sendStatus(200);
     } catch (err:any) {

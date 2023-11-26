@@ -86,7 +86,7 @@ export const getRandomMovies = async (req: Request, res: Response) => {
       return !found;
     });
 
-    console.log("BONSOIR");
+   
     res.json(movies);
   } catch (error) {
     res.status(500).send(error);

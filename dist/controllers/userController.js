@@ -77,13 +77,15 @@ async function getFriendsHandler(req, res) {
 exports.getFriendsHandler = getFriendsHandler;
 async function addFriendHandler(req, res) {
     try {
-        const friendEmail = req.body.email;
-        const result = await (0, userRepo_1.addFriend)(req.params.id, friendEmail);
-        if (result == false) {
+        const friendUsername = req.body.username;
+        console.log(req.body.username);
+        //const result = await addFriend(req.params.id, friendEmail);
+        const result = await (0, userRepo_1.addFriendWithUsername)(req.params.id, friendUsername);
+        if (result.success == false) {
             res.status(404).send("Friend not found");
             return;
         }
-        res.sendStatus(200);
+        res.send(result);
     }
     catch (err) {
         res.status(500);

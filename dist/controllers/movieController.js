@@ -58,7 +58,6 @@ const getRandomMovies = async (req, res) => {
             });
             return !found;
         });
-        console.log("BONSOIR");
         res.json(movies);
     }
     catch (error) {

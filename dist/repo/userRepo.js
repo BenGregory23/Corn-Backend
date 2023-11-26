@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 const crypto_js_1 = require("crypto-js");
@@ -77,11 +77,29 @@ async function getFriends(id) {
     }
     return friends.map((friend) => ({
         _id: friend._id.toString(),
-        name: friend.name,
+        username: friend.username,
         email: friend.email,
     }));
 }
 exports.getFriends = getFriends;
+async function addFriendWithUsername(userId, friendUsername) {
+    const db = (0, db_1.getDB)();
+    // find friend by username
+    const friend = await db.collection('users').findOne({ username: friendUsername });
+    if (!friend) {
+        return { success: false, error: 'User not found' };
+    }
+    // Check if the user is already friends with this friend
+    const isFriend = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId), friends: new mongodb_1.ObjectId(friend._id) });
+    if (isFriend) {
+        return { success: false, error: 'Already friends' };
+    }
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $push: { friends: new mongodb_1.ObjectId(friend._id) } });
+    // Also add the user to the friend's friends list
+    await db.collection('users').updateOne({ _id: friend._id }, { $push: { friends: new mongodb_1.ObjectId(userId) } });
+    return { success: result.modifiedCount > 0 };
+}
+exports.addFriendWithUsername = addFriendWithUsername;
 async function addFriend(userId, friendEmail) {
     const db = (0, db_1.getDB)();
     // find friend by email
@@ -120,13 +138,24 @@ async function removeGenre(userId, genre) {
 exports.removeGenre = removeGenre;
 async function addMovie(userId, movie) {
     const db = (0, db_1.getDB)();
+    // check if movie already exists in user's collection
+    const existingMovie = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId), movies: movie });
+    if (existingMovie) {
+        return false;
+    }
     const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $push: { movies: movie } });
     return result.modifiedCount > 0;
 }
 exports.addMovie = addMovie;
 async function removeMovie(userId, movie) {
     const db = (0, db_1.getDB)();
-    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $pull: { movies: movie } });
+    console.log("Movie to remove:", movie);
+    // Use the movie ID directly without converting to ObjectId
+    const movieId = movie._id;
+    console.log("MovieId:", movieId);
+    // Attempt to remove the movie from the user's collection
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $pull: { movies: { _id: movieId } } });
+    console.log("Modified Count:", result.modifiedCount);
     return result.modifiedCount > 0;
 }
 exports.removeMovie = removeMovie;

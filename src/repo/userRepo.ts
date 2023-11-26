@@ -8,8 +8,7 @@ import { SHA256 } from "crypto-js";
 
 export async function getUsers(): Promise<User[]> {
   const db = getDB();
- 
-    
+
   // loop through the documents and map them to the User type
     const users = await db.collection('users').find({}).toArray();
    if(!users) {
@@ -91,10 +90,34 @@ export async function getFriends(id: string): Promise<any[]> {
 
     return friends.map((friend: any) => ({
         _id: friend._id.toString(),
-        name: friend.name,
+        username: friend.username,
         email: friend.email,
     }));
 
+}
+
+
+export async function addFriendWithUsername(userId: string, friendUsername: string): Promise<{success: boolean, error?: string}> {
+    const db = getDB();
+    // find friend by username
+    const friend = await db.collection('users').findOne({ username: friendUsername });
+    if (!friend) {
+       
+        return {success: false, error: 'User not found'};
+    }
+
+    // Check if the user is already friends with this friend
+    const isFriend = await db.collection('users').findOne({ _id: new ObjectId(userId), friends: new ObjectId(friend._id) });
+    if (isFriend) {
+   
+        return {success: false, error: 'Already friends'};
+    }
+
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $push: { friends: new ObjectId(friend._id) } });
+    // Also add the user to the friend's friends list
+    await db.collection('users').updateOne({ _id: friend._id }, { $push: { friends: new ObjectId(userId) } });
+
+    return {success: result.modifiedCount > 0};
 }
 
 export async function addFriend(userId: string, friendEmail: string): Promise<boolean> {
@@ -138,15 +161,40 @@ export async function removeGenre(userId: string, genre: string): Promise<boolea
 
 export async function addMovie(userId: string, movie: object): Promise<boolean> {
     const db = getDB();
+    // check if movie already exists in user's collection
+
+    const existingMovie = await db.collection('users').findOne({ _id: new ObjectId(userId), movies: movie });
+    if (existingMovie) {
+        return false;
+    }
     const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $push: { movies: movie } });
     return result.modifiedCount > 0;
 }
 
-export async function removeMovie(userId: string, movie: object): Promise<boolean> {
+interface Movie {
+    _id: string;
+}
+
+
+export async function removeMovie(userId: string, movie: Movie): Promise<boolean> {
     const db = getDB();
-    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $pull: { movies: movie } });
+    console.log("Movie to remove:", movie);
+
+    // Use the movie ID directly without converting to ObjectId
+    const movieId = movie._id;
+    console.log("MovieId:", movieId);
+
+    // Attempt to remove the movie from the user's collection
+    const result = await db.collection('users').updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { movies: { _id: movieId } } }
+    );
+
+    console.log("Modified Count:", result.modifiedCount);
+    
     return result.modifiedCount > 0;
 }
+
 
 export async function getMoviesFromUser(userId: string): Promise<object[]> {
     const db = getDB();
