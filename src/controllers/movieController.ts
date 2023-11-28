@@ -34,8 +34,8 @@ export const getRandomMovies = async (req: Request, res: Response) => {
       while (randomPage === 0) {
         randomPage = Math.floor(Math.random() * 500);
       }
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}`;
-
+     //const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}`;
+      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}&include_adult=false&include_video=false&language=en-US&vote_average.gte=3&vote_count.gte=3000`
       const response = await fetch(url);
       const data = await response.json();
 
