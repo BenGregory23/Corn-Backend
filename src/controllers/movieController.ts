@@ -72,13 +72,15 @@ export const getRandomMovies = async (req: Request, res: Response) => {
     const userId = req.params.id;
     const userMovies = await getMoviesFromUser(userId) as any[];
     const userMovieIds = new Set(userMovies.map(movie => movie.id_tmdb));
+    const locale = req.query.locale || 'en-US';
+    console.log(locale);
 
     const movies = [];
     const responses = new Set();
 
     while (movies.length < 60 && responses.size < 60) {
       const randomPage = Math.floor(Math.random() * 500) + 1;
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}&include_adult=false&include_video=false&language=en-US&vote_average.gte=3&vote_count.gte=3000`;
+      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&page=${randomPage}&include_adult=false&include_video=false&language=${locale}&vote_average.gte=3&vote_count.gte=3000`;
       const response = await fetch(url);
       const data = await response.json();
 
