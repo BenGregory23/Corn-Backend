@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.setProfilePicture = exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 const crypto_js_1 = require("crypto-js");
@@ -19,6 +19,7 @@ async function getUsers() {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     }));
 }
 exports.getUsers = getUsers;
@@ -36,6 +37,7 @@ async function getUser(id) {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     };
 }
 exports.getUser = getUser;
@@ -75,10 +77,12 @@ async function getFriends(id) {
     if (!friends) {
         return [];
     }
+    console.log(friends);
     return friends.map((friend) => ({
         _id: friend._id.toString(),
         username: friend.username,
         email: friend.email,
+        profilePicture: friend.profilePicture
     }));
 }
 exports.getFriends = getFriends;
@@ -149,13 +153,10 @@ async function addMovie(userId, movie) {
 exports.addMovie = addMovie;
 async function removeMovie(userId, movie) {
     const db = (0, db_1.getDB)();
-    console.log("Movie to remove:", movie);
     // Use the movie ID directly without converting to ObjectId
     const movieId = movie._id;
-    console.log("MovieId:", movieId);
     // Attempt to remove the movie from the user's collection
     const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $pull: { movies: { _id: movieId } } });
-    console.log("Modified Count:", result.modifiedCount);
     return result.modifiedCount > 0;
 }
 exports.removeMovie = removeMovie;
@@ -202,3 +203,14 @@ async function addUserToGroup(userId, groupId) {
     return result.modifiedCount > 0;
 }
 exports.addUserToGroup = addUserToGroup;
+// Set profile picture string for a user 
+async function setProfilePicture(userId, picture) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $set: { profilePicture: picture } });
+    return {
+        success: result.modifiedCount > 0,
+        error: result.modifiedCount > 0 ? undefined : 'Failed to set profile picture',
+        message: result.modifiedCount > 0 ? 'Profile picture set' : undefined
+    };
+}
+exports.setProfilePicture = setProfilePicture;

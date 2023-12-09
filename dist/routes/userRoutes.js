@@ -17,4 +17,5 @@ router.get("/users/:id/groups", userController_1.getGroupsHandler);
 router.post("/users/:id/groups", userController_1.createGroupHandler);
 router.put("/users/:id/groups", userController_1.addUserToGroupHandler);
 router.delete("/users/:id/groups", userController_1.removeGroupHandler);
+router.put("/users/:id/picture", userController_1.setProfilePictureHandler);
 module.exports = router;

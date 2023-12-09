@@ -73,7 +73,7 @@ export const getRandomMovies = async (req: Request, res: Response) => {
     const userMovies = await getMoviesFromUser(userId) as any[];
     const userMovieIds = new Set(userMovies.map(movie => movie.id_tmdb));
     const locale = req.query.locale || 'en-US';
-    console.log(locale);
+   
 
     const movies = [];
     const responses = new Set();

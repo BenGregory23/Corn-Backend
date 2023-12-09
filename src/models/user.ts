@@ -6,6 +6,7 @@ export interface User {
     friends: string[];
     groups: string[];
     movies: object[];
+    profilePicture: string | null;
 }
 
 export interface UserWithPassword extends User {

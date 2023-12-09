@@ -55,7 +55,6 @@ const getRandomMovies = async (req, res) => {
         const userMovies = await (0, userRepo_1.getMoviesFromUser)(userId);
         const userMovieIds = new Set(userMovies.map(movie => movie.id_tmdb));
         const locale = req.query.locale || 'en-US';
-        console.log(locale);
         const movies = [];
         const responses = new Set();
         while (movies.length < 60 && responses.size < 60) {

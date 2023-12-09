@@ -3,6 +3,7 @@ import { User, UserWithPassword } from "../models/user";
 import { getDB } from "../db";
 import { ObjectId } from "mongodb";
 import { SHA256 } from "crypto-js";
+import { CustomResponse } from "../models/CustomResponse";
 
 
 
@@ -15,6 +16,8 @@ export async function getUsers(): Promise<User[]> {
        throw new Error('No users found');
    }
 
+
+
     return users.map((user: any) => ({
         _id: user._id.toString(),
         name: user.name,
@@ -23,6 +26,7 @@ export async function getUsers(): Promise<User[]> {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     }));
 }
 
@@ -41,6 +45,7 @@ export async function getUser(id: string): Promise<User | null> {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     };
 }
 
@@ -88,10 +93,13 @@ export async function getFriends(id: string): Promise<any[]> {
         return [];
     }
 
+    console.log(friends)
+
     return friends.map((friend: any) => ({
         _id: friend._id.toString(),
         username: friend.username,
         email: friend.email,
+        profilePicture: friend.profilePicture
     }));
 
 }
@@ -178,11 +186,11 @@ interface Movie {
 
 export async function removeMovie(userId: string, movie: Movie): Promise<boolean> {
     const db = getDB();
-    console.log("Movie to remove:", movie);
+  
 
     // Use the movie ID directly without converting to ObjectId
     const movieId = movie._id;
-    console.log("MovieId:", movieId);
+    
 
     // Attempt to remove the movie from the user's collection
     const result = await db.collection('users').updateOne(
@@ -190,7 +198,7 @@ export async function removeMovie(userId: string, movie: Movie): Promise<boolean
         { $pull: { movies: { _id: movieId } } }
     );
 
-    console.log("Modified Count:", result.modifiedCount);
+
     
     return result.modifiedCount > 0;
 }
@@ -239,6 +247,18 @@ export async function addUserToGroup(userId: string, groupId: string): Promise<b
     }
     const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $push: { groups: groupId } });
     return result.modifiedCount > 0;
+}
+
+// Set profile picture string for a user 
+export async function setProfilePicture(userId: string, picture: string): Promise<CustomResponse> {
+
+    const db = getDB();
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $set: { profilePicture: picture } });
+    return{
+        success: result.modifiedCount > 0,
+        error: result.modifiedCount > 0 ? undefined : 'Failed to set profile picture',
+        message: result.modifiedCount > 0 ? 'Profile picture set' : undefined
+    }
 }
 
 

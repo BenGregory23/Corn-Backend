@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
+exports.setProfilePictureHandler = exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
 const userRepo_1 = require("../repo/userRepo");
 async function getAllUsers(req, res) {
     try {
@@ -78,7 +78,6 @@ exports.getFriendsHandler = getFriendsHandler;
 async function addFriendHandler(req, res) {
     try {
         const friendUsername = req.body.username;
-        console.log(req.body.username);
         //const result = await addFriend(req.params.id, friendEmail);
         const result = await (0, userRepo_1.addFriendWithUsername)(req.params.id, friendUsername);
         if (result.success == false) {
@@ -207,3 +206,20 @@ async function createGroupHandler(req, res) {
     }
 }
 exports.createGroupHandler = createGroupHandler;
+async function setProfilePictureHandler(req, res) {
+    console.log(req.body);
+    try {
+        const result = await (0, userRepo_1.setProfilePicture)(req.params.id, req.body.profilePicture);
+        if (result.success) {
+            res.send(200);
+        }
+        else if (result.success == false) {
+            res.send(404);
+        }
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.setProfilePictureHandler = setProfilePictureHandler;

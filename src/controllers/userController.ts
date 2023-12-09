@@ -17,7 +17,8 @@ import {    getUsers,
             removeGroup,
             getGroups,
             addUserToGroup,
-            addFriendWithUsername
+            addFriendWithUsername,
+            setProfilePicture
         } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -94,7 +95,7 @@ export async function addFriendHandler(req: Request, res: Response) {
         
      
         const friendUsername = req.body.username;
-        console.log(req.body.username)
+     
         
 
         //const result = await addFriend(req.params.id, friendEmail);
@@ -218,6 +219,22 @@ export async function createGroupHandler(req: Request, res: Response) {
     } catch (err:any) {
         res.status(500);
         res.send(err.message);
+    }
+}
+
+export async function setProfilePictureHandler(req: Request, res: Response){
+    console.log(req.body)
+    try{
+        const result = await setProfilePicture(req.params.id, req.body.profilePicture)
+        if(result.success){
+            res.send(200)
+        }
+        else if(result.success == false){
+            res.send(404)
+        }
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
     }
 }
 
