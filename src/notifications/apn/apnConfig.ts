@@ -1,5 +1,7 @@
 // apnConfig.js
 import * as apn from "@parse/node-apn";
+import dotenv from 'dotenv';
+dotenv.config();
 
 let options = {
   token: {
@@ -8,7 +10,7 @@ let options = {
     keyId: "VJ8U73GZG3", // Replace with your Key ID
     teamId: "QJMXQ6FX46" // Replace with your Team ID
   },
-  production: false // Change to true in production environment
+  production:  process.env.NODE_APN_PRODUCTION === "true" ? true : false // Set to true if sending a notification to a production iOS app
 };
 
 let apnProvider = new apn.Provider(options);
