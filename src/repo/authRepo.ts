@@ -17,6 +17,7 @@ export async function login(email:string, password:string){
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     };
 }
 

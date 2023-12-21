@@ -18,4 +18,6 @@ router.post("/users/:id/groups", userController_1.createGroupHandler);
 router.put("/users/:id/groups", userController_1.addUserToGroupHandler);
 router.delete("/users/:id/groups", userController_1.removeGroupHandler);
 router.put("/users/:id/picture", userController_1.setProfilePictureHandler);
+router.get("/users/:id/token", userController_1.getDeviceTokenHandler);
+router.post("/users/:id/token", userController_1.setDeviceTokenHandler);
 module.exports = router;

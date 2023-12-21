@@ -21,8 +21,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', require('./routes/authRoutes'));
+app.use('/api', require('./routes/notificationsRoutes'));
 app.use('/api', authMiddleware, require('./routes/userRoutes'));
 app.use('/api', authMiddleware, require('./routes/movieRoutes'));
+
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

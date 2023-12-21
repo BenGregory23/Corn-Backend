@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
     res.send('Hello, TypeScript!');
 });
 app.use('/api', require('./routes/authRoutes'));
+app.use('/api', require('./routes/notificationsRoutes'));
 app.use('/api', authMiddleware_1.authMiddleware, require('./routes/userRoutes'));
 app.use('/api', authMiddleware_1.authMiddleware, require('./routes/movieRoutes'));
 app.listen(port, () => {

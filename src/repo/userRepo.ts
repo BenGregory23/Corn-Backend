@@ -93,7 +93,7 @@ export async function getFriends(id: string): Promise<any[]> {
         return [];
     }
 
-    console.log(friends)
+
 
     return friends.map((friend: any) => ({
         _id: friend._id.toString(),
@@ -258,6 +258,58 @@ export async function setProfilePicture(userId: string, picture: string): Promis
         success: result.modifiedCount > 0,
         error: result.modifiedCount > 0 ? undefined : 'Failed to set profile picture',
         message: result.modifiedCount > 0 ? 'Profile picture set' : undefined
+    }
+}
+
+
+export async function getProfilePicture(userId: string): Promise<string> {
+    const db = getDB();
+    const result = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    if (!result) {
+        return '';
+    }
+
+    const picture = result.profilePicture || '';
+    return picture;
+}
+
+// set device token for a user
+export async function setDeviceToken(userId: string, token: string): Promise<CustomResponse> {
+   
+    const db = getDB();
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId) }, { $set: { deviceToken: token } });
+    
+    return{
+        success: result.modifiedCount > 0,
+        error: result.modifiedCount > 0 ? undefined : 'Failed to set device token',
+        message: result.modifiedCount > 0 ? 'Device token set' : undefined
+    }
+}
+
+export async function getDeviceToken(userId: string): Promise<CustomResponse> {
+    const db = getDB();
+    const result = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    if (!result) {
+        return {
+            success: false,
+            error: 'No user found',
+            message: undefined
+        }
+    }
+    if(!result.deviceToken) {
+        return {
+            success: false,
+            error: 'No device token found',
+            message: undefined
+        }
+    }
+    const token = result.deviceToken;
+
+    return {
+        success: true,
+        error: undefined,
+        message: "Device token found",
+        data: token
     }
 }
 

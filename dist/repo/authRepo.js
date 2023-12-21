@@ -17,6 +17,7 @@ async function login(email, password) {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
+        profilePicture: user.profilePicture
     };
 }
 exports.login = login;

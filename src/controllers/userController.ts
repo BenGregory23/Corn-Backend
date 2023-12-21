@@ -5,8 +5,7 @@ import {    getUsers,
             createUser, 
             updateUser, 
             deleteUser, 
-            getFriends, 
-            addFriend, 
+            getFriends,  
             removeFriend, 
             addGenre, 
             removeGenre, 
@@ -18,7 +17,10 @@ import {    getUsers,
             getGroups,
             addUserToGroup,
             addFriendWithUsername,
-            setProfilePicture
+            setProfilePicture,
+            getProfilePicture,
+            setDeviceToken,
+            getDeviceToken
         } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -223,7 +225,7 @@ export async function createGroupHandler(req: Request, res: Response) {
 }
 
 export async function setProfilePictureHandler(req: Request, res: Response){
-    console.log(req.body)
+   
     try{
         const result = await setProfilePicture(req.params.id, req.body.profilePicture)
         if(result.success){
@@ -232,6 +234,46 @@ export async function setProfilePictureHandler(req: Request, res: Response){
         else if(result.success == false){
             res.send(404)
         }
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
+    }
+}
+
+
+
+export async function getProfilePictureHandler(req: Request, res: Response){
+    try{
+        const result = await getProfilePicture(req.params.id)
+        res.send(result)
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
+    }
+}
+
+export async function setDeviceTokenHandler(req: Request, res: Response){
+    try{
+        
+        const result = await setDeviceToken(req.params.id, req.body.deviceToken)
+        if(result.success){
+            
+            res.status(200)
+            
+        }
+        else if(result.success == false){
+            res.status(404)
+        }
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
+    }
+}
+
+export async function getDeviceTokenHandler(req: Request, res: Response){
+    try{
+        const result = await getDeviceToken(req.params.id)
+        res.send(result)
     } catch(err: any){
         res.status(500)
         res.send(err.message)

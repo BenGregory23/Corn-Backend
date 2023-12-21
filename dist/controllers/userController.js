@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setProfilePictureHandler = exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
+exports.getDeviceTokenHandler = exports.setDeviceTokenHandler = exports.getProfilePictureHandler = exports.setProfilePictureHandler = exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
 const userRepo_1 = require("../repo/userRepo");
 async function getAllUsers(req, res) {
     try {
@@ -207,7 +207,6 @@ async function createGroupHandler(req, res) {
 }
 exports.createGroupHandler = createGroupHandler;
 async function setProfilePictureHandler(req, res) {
-    console.log(req.body);
     try {
         const result = await (0, userRepo_1.setProfilePicture)(req.params.id, req.body.profilePicture);
         if (result.success) {
@@ -223,3 +222,41 @@ async function setProfilePictureHandler(req, res) {
     }
 }
 exports.setProfilePictureHandler = setProfilePictureHandler;
+async function getProfilePictureHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.getProfilePicture)(req.params.id);
+        res.send(result);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.getProfilePictureHandler = getProfilePictureHandler;
+async function setDeviceTokenHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.setDeviceToken)(req.params.id, req.body.deviceToken);
+        if (result.success) {
+            res.status(200);
+        }
+        else if (result.success == false) {
+            res.status(404);
+        }
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.setDeviceTokenHandler = setDeviceTokenHandler;
+async function getDeviceTokenHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.getDeviceToken)(req.params.id);
+        res.send(result);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.getDeviceTokenHandler = getDeviceTokenHandler;

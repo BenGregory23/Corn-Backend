@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setProfilePicture = exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.getDeviceToken = exports.setDeviceToken = exports.getProfilePicture = exports.setProfilePicture = exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 const crypto_js_1 = require("crypto-js");
@@ -77,7 +77,6 @@ async function getFriends(id) {
     if (!friends) {
         return [];
     }
-    console.log(friends);
     return friends.map((friend) => ({
         _id: friend._id.toString(),
         username: friend.username,
@@ -214,3 +213,50 @@ async function setProfilePicture(userId, picture) {
     };
 }
 exports.setProfilePicture = setProfilePicture;
+async function getProfilePicture(userId) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId) });
+    if (!result) {
+        return '';
+    }
+    const picture = result.profilePicture || '';
+    return picture;
+}
+exports.getProfilePicture = getProfilePicture;
+// set device token for a user
+async function setDeviceToken(userId, token) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $set: { deviceToken: token } });
+    return {
+        success: result.modifiedCount > 0,
+        error: result.modifiedCount > 0 ? undefined : 'Failed to set device token',
+        message: result.modifiedCount > 0 ? 'Device token set' : undefined
+    };
+}
+exports.setDeviceToken = setDeviceToken;
+async function getDeviceToken(userId) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId) });
+    if (!result) {
+        return {
+            success: false,
+            error: 'No user found',
+            message: undefined
+        };
+    }
+    if (!result.deviceToken) {
+        return {
+            success: false,
+            error: 'No device token found',
+            message: undefined
+        };
+    }
+    const token = result.deviceToken;
+    return {
+        success: true,
+        error: undefined,
+        message: "Device token found",
+        data: token
+    };
+}
+exports.getDeviceToken = getDeviceToken;
