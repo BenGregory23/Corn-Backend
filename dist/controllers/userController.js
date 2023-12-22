@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDeviceTokenHandler = exports.setDeviceTokenHandler = exports.getProfilePictureHandler = exports.setProfilePictureHandler = exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
+exports.getMovieTagHandler = exports.setMovieTagHandler = exports.getDeviceTokenHandler = exports.setDeviceTokenHandler = exports.getProfilePictureHandler = exports.setProfilePictureHandler = exports.createGroupHandler = exports.addUserToGroupHandler = exports.removeGroupHandler = exports.getGroupsHandler = exports.removeMovieHandler = exports.addMovieHandler = exports.getUserMovies = exports.removeGenreHandler = exports.addGenreHandler = exports.removeFriendHandler = exports.addFriendHandler = exports.getFriendsHandler = exports.deleteUserHandler = exports.updateUserHandler = exports.createUserHandler = exports.getUserById = exports.getAllUsers = void 0;
 const userRepo_1 = require("../repo/userRepo");
 async function getAllUsers(req, res) {
     try {
@@ -260,3 +260,25 @@ async function getDeviceTokenHandler(req, res) {
     }
 }
 exports.getDeviceTokenHandler = getDeviceTokenHandler;
+async function setMovieTagHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.setMovieTag)(req.params.id, req.params.movieId, req.body.tag);
+        res.send(result);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.setMovieTagHandler = setMovieTagHandler;
+async function getMovieTagHandler(req, res) {
+    try {
+        const result = await (0, userRepo_1.getMovieTag)(req.params.id, req.params.movieId);
+        res.send(result);
+    }
+    catch (err) {
+        res.status(500);
+        res.send(err.message);
+    }
+}
+exports.getMovieTagHandler = getMovieTagHandler;

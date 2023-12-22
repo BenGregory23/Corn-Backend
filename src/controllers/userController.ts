@@ -20,7 +20,9 @@ import {    getUsers,
             setProfilePicture,
             getProfilePicture,
             setDeviceToken,
-            getDeviceToken
+            getDeviceToken,
+            setMovieTag,
+            getMovieTag
         } from '../repo/userRepo';
 
 export async function getAllUsers(req: Request, res: Response) {
@@ -273,6 +275,27 @@ export async function setDeviceTokenHandler(req: Request, res: Response){
 export async function getDeviceTokenHandler(req: Request, res: Response){
     try{
         const result = await getDeviceToken(req.params.id)
+        res.send(result)
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
+    }
+}
+
+export async function setMovieTagHandler(req: Request, res: Response){
+    
+    try{
+        const result = await setMovieTag(req.params.id, req.params.movieId, req.body.tag)
+        res.send(result)
+    } catch(err: any){
+        res.status(500)
+        res.send(err.message)
+    }
+}
+
+export async function getMovieTagHandler(req: Request, res: Response){
+    try{
+        const result = await getMovieTag(req.params.id, req.params.movieId)
         res.send(result)
     } catch(err: any){
         res.status(500)

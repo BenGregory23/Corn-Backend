@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, createUserHandler, updateUserHandler, deleteUserHandler, addMovieHandler, removeMovieHandler, addFriendHandler, removeFriendHandler, getFriendsHandler, getUserMovies, getGroupsHandler, addGenreHandler, addUserToGroupHandler, createGroupHandler, removeGroupHandler, setProfilePictureHandler, getDeviceTokenHandler, setDeviceTokenHandler} from "../controllers/userController";
+import { getAllUsers, getUserById, createUserHandler, updateUserHandler, deleteUserHandler, addMovieHandler, removeMovieHandler, addFriendHandler, removeFriendHandler, getFriendsHandler, getUserMovies, getGroupsHandler, addGenreHandler, addUserToGroupHandler, createGroupHandler, removeGroupHandler, setProfilePictureHandler, getDeviceTokenHandler, setDeviceTokenHandler, setMovieTagHandler, getMovieTagHandler} from "../controllers/userController";
 
 
 const router = require("express").Router();
@@ -21,6 +21,8 @@ router.delete("/users/:id/groups", removeGroupHandler);
 router.put("/users/:id/picture", setProfilePictureHandler)
 router.get("/users/:id/token", getDeviceTokenHandler);
 router.post("/users/:id/token", setDeviceTokenHandler);
+router.put("/users/:id/movies/:movieId/tag", setMovieTagHandler);
+router.get("/users/:id/movies/:movieId/tag", getMovieTagHandler);
 
 
 module.exports = router;

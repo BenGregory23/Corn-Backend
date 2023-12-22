@@ -26,7 +26,8 @@ export async function getUsers(): Promise<User[]> {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        tags: user.tags
     }));
 }
 
@@ -45,7 +46,7 @@ export async function getUser(id: string): Promise<User | null> {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
     };
 }
 
@@ -311,6 +312,24 @@ export async function getDeviceToken(userId: string): Promise<CustomResponse> {
         message: "Device token found",
         data: token
     }
+}
+
+export async function setMovieTag(userId: string, movieId: string, tag: string): Promise<boolean> {
+    const db = getDB();
+    console.log(userId, movieId, tag);
+    const result = await db.collection('users').updateOne({ _id: new ObjectId(userId), 'movies._id': movieId }, { $set: { 'movies.$.tag': tag } });
+    return result.modifiedCount > 0;
+}
+
+export async function getMovieTag(userId: string, movieId: string): Promise<string> {
+    const db = getDB();
+    const result = await db.collection('users').findOne({ _id: new ObjectId(userId), 'movies._id': movieId });
+    if (!result) {
+        return '';
+    }
+
+    const movie = result.movies.find((movie: any) => movie._id === movieId);
+    return movie.tag;
 }
 
 

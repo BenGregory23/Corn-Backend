@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDeviceToken = exports.setDeviceToken = exports.getProfilePicture = exports.setProfilePicture = exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
+exports.getMovieTag = exports.setMovieTag = exports.getDeviceToken = exports.setDeviceToken = exports.getProfilePicture = exports.setProfilePicture = exports.addUserToGroup = exports.removeGroup = exports.createGroup = exports.getGroups = exports.getMoviesFromUser = exports.removeMovie = exports.addMovie = exports.removeGenre = exports.addGenre = exports.removeFriend = exports.addFriend = exports.addFriendWithUsername = exports.getFriends = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.getUsers = void 0;
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 const crypto_js_1 = require("crypto-js");
@@ -19,7 +19,8 @@ async function getUsers() {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        tags: user.tags
     }));
 }
 exports.getUsers = getUsers;
@@ -37,7 +38,7 @@ async function getUser(id) {
         friends: user.friends,
         movies: user.movies,
         groups: user.groups,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
     };
 }
 exports.getUser = getUser;
@@ -260,3 +261,20 @@ async function getDeviceToken(userId) {
     };
 }
 exports.getDeviceToken = getDeviceToken;
+async function setMovieTag(userId, movieId, tag) {
+    const db = (0, db_1.getDB)();
+    console.log(userId, movieId, tag);
+    const result = await db.collection('users').updateOne({ _id: new mongodb_1.ObjectId(userId), 'movies._id': movieId }, { $set: { 'movies.$.tag': tag } });
+    return result.modifiedCount > 0;
+}
+exports.setMovieTag = setMovieTag;
+async function getMovieTag(userId, movieId) {
+    const db = (0, db_1.getDB)();
+    const result = await db.collection('users').findOne({ _id: new mongodb_1.ObjectId(userId), 'movies._id': movieId });
+    if (!result) {
+        return '';
+    }
+    const movie = result.movies.find((movie) => movie._id === movieId);
+    return movie.tag;
+}
+exports.getMovieTag = getMovieTag;

@@ -22,16 +22,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // apnConfig.js
 const apn = __importStar(require("@parse/node-apn"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 let options = {
     token: {
         key: "src/notifications/apn/key.p8",
         keyId: "VJ8U73GZG3",
         teamId: "QJMXQ6FX46" // Replace with your Team ID
     },
-    production: false // Change to true in production environment
+    production: process.env.NODE_APN_PRODUCTION === "true" ? true : false // Set to true if sending a notification to a production iOS app
 };
 let apnProvider = new apn.Provider(options);
 exports.default = apnProvider;

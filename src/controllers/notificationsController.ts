@@ -12,6 +12,7 @@ export async function sendNotification(req: Request, res: Response) {
     let senderId = req.body.senderId;
     let recipientId = req.body.recipientId;
     let message = req.body.message;
+    let notificationType = req.body.notificationType;
 
     let notification = new apn.Notification({
         alert: message,
@@ -19,10 +20,18 @@ export async function sendNotification(req: Request, res: Response) {
         badge: 1 ,
         topic: "com.bengregory.Corn",
         payload: {
-            "senderId": senderId,
-            "recipientId": recipientId
+            
+                "aps": {
+                    "alert":{
+                        "title":"title",
+                        "subtitle":"subtitle",
+                        "body":"body"
+                    },
+            }
         },
-        pushType: "alert"
+        
+        pushType: "alert",
+        
     });
 
     let response = await getDeviceToken(recipientId);
@@ -48,4 +57,9 @@ export async function sendNotification(req: Request, res: Response) {
         console.log(error);
         res.status(500).send(error);
     });
+}
+
+
+function proposeMovieToFriend(senderId: string, recipientId: string, movieId: string) {
+    // Todo
 }

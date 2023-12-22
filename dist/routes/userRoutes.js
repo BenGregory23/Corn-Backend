@@ -20,4 +20,6 @@ router.delete("/users/:id/groups", userController_1.removeGroupHandler);
 router.put("/users/:id/picture", userController_1.setProfilePictureHandler);
 router.get("/users/:id/token", userController_1.getDeviceTokenHandler);
 router.post("/users/:id/token", userController_1.setDeviceTokenHandler);
+router.put("/users/:id/movies/:movieId/tag", userController_1.setMovieTagHandler);
+router.get("/users/:id/movies/:movieId/tag", userController_1.getMovieTagHandler);
 module.exports = router;

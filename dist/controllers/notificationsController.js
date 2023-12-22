@@ -14,16 +14,22 @@ async function sendNotification(req, res) {
     let senderId = req.body.senderId;
     let recipientId = req.body.recipientId;
     let message = req.body.message;
+    let notificationType = req.body.notificationType;
     let notification = new node_apn_1.default.Notification({
         alert: message,
         sound: "default",
         badge: 1,
         topic: "com.bengregory.Corn",
         payload: {
-            "senderId": senderId,
-            "recipientId": recipientId
+            "aps": {
+                "alert": {
+                    "title": "title",
+                    "subtitle": "subtitle",
+                    "body": "body"
+                },
+            }
         },
-        pushType: "alert"
+        pushType: "alert",
     });
     let response = await (0, userRepo_1.getDeviceToken)(recipientId);
     if (response.error) {
@@ -46,3 +52,6 @@ async function sendNotification(req, res) {
     });
 }
 exports.sendNotification = sendNotification;
+function proposeMovieToFriend(senderId, recipientId, movieId) {
+    // Todo
+}
